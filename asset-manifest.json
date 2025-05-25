@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/rinoxx1/ingredients-gourmands.git/static/css/main.f33c3fa1.css",
-    "main.js": "/rinoxx1/ingredients-gourmands.git/static/js/main.bd9825f5.js",
-    "index.html": "/rinoxx1/ingredients-gourmands.git/index.html",
-    "main.f33c3fa1.css.map": "/rinoxx1/ingredients-gourmands.git/static/css/main.f33c3fa1.css.map",
-    "main.bd9825f5.js.map": "/rinoxx1/ingredients-gourmands.git/static/js/main.bd9825f5.js.map"
+    "main.css": "/ingredients-gourmands/static/css/main.f33c3fa1.css",
+    "main.js": "/ingredients-gourmands/static/js/main.bd9825f5.js",
+    "index.html": "/ingredients-gourmands/index.html",
+    "main.f33c3fa1.css.map": "/ingredients-gourmands/static/css/main.f33c3fa1.css.map",
+    "main.bd9825f5.js.map": "/ingredients-gourmands/static/js/main.bd9825f5.js.map"
   },
   "entrypoints": [
     "static/css/main.f33c3fa1.css",
