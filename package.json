@@ -2,7 +2,7 @@
   "name": "mon-projet-recettes",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/rinoxx1/ingredients-gourmands.git",
+  "homepage": "https://rinoxx1.github.io/ingredients-gourmands/",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
