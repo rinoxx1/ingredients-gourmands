@@ -1,0 +1,128 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles personnalisés pour la police Inter et le style de base du corps */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Barre de défilement personnalisée pour une meilleure esthétique */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #fdfbfb; /* Couleur de la piste de défilement */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #b2dfdb; /* Couleur du pouce de défilement (vert menthe) */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #80cbc4; /* Couleur du pouce de défilement au survol */
+}
+
+/* Modal specific styles */
+.modal {
+    display: none; /* Hidden by default, géré par JS/React state */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.75); /* Black with more opacity */
+    backdrop-filter: blur(10px); /* Frosted glass effect, stronger */
+    justify-content: center;
+    align-items: center;
+    padding: 15px; /* Plus petit padding pour la modale sur mobile */
+}
+
+@media (min-width: 640px) { /* sm breakpoint */
+    .modal {
+        padding: 20px;
+    }
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: auto;
+    padding: 25px; /* Plus petit padding pour le contenu de la modale sur mobile */
+    border-radius: 20px; /* Rayon de bordure adapté */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35); /* Ombre ajustée */
+    width: 95%; /* Largeur adaptée */
+    max-width: 900px; /* Max width pour les écrans plus grands */
+    max-height: 90vh; /* Limite de hauteur pour le défilement */
+    overflow-y: auto; /* Défilement si contenu trop long */
+    position: relative;
+    animation: fadeInScale 0.5s ease-out; /* Animation */
+}
+
+@media (min-width: 640px) { /* sm breakpoint */
+    .modal-content {
+        padding: 40px;
+        border-radius: 25px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+}
+
+.close-button {
+    color: #a0a0a0;
+    position: absolute;
+    top: 15px; /* Ajusté pour mobile */
+    right: 20px; /* Ajusté pour mobile */
+    font-size: 36px; /* Taille pour mobile */
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+@media (min-width: 640px) { /* sm breakpoint */
+    .close-button {
+        top: 25px;
+        right: 35px;
+        font-size: 40px;
+    }
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #777;
+    transform: rotate(90deg) scale(1.1);
+}
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Loading spinner animation */
+.loader {
+    border: 5px solid #FFF8E1; /* Couleur de fond du loader assortie au body */
+    border-top: 5px solid #8bc34a; /* Vert lime */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Custom animation for header utensil icon */
+.animate-bounce-subtle {
+    animation: bounceSubtle 2s infinite ease-in-out;
+}
+@keyframes bounceSubtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
