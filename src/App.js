@@ -1,28 +1,59 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Import your existing components
 import Header from './components/Header';
-import SearchBar from './components/SearchBar';
-import RecipeCard from './components/RecipeCard';
-import RecipeDetailModal from './components/RecipeDetailModal';
+import SearchBar from './components/SearchBar'; // Keep SearchBar import for passing to HomeContent
+import RecipeCard from './components/RecipeCard'; // Keep RecipeCard import for passing to HomeContent
+import RecipeDetailModal from './components/RecipeDetailModal'; // Keep RecipeDetailModal import for global use
 import Footer from './components/Footer';
+import HomeContent from './components/HomeContent'; // Import HomeContent
+
+// Import new page components
+import Contact from './pages/Contact';
+import FAQ from './pages/FAQ';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfUse from './pages/TermsOfUse';
+import CategoryPage from './pages/CategoryPage'; // Import CategoryPage
 
 function App() {
-    // Vos clés API Edamam
-    // Pour un usage en production, il est recommandé d'utiliser des variables d'environnement
-    // (par exemple, via un fichier .env.local et process.env.REACT_APP_APP_ID si vous utilisez Create React App,
-    // ou import.meta.env.VITE_APP_ID si vous utilisez Vite).
+    // Your Edamam API keys
     const APP_ID = 'bbf78c38'; 
     const APP_KEY = '56bd36cda1fa6f259c612645adc79e88';
-    const EDAMAM_USER_ID = 'Rinoxx1'; // Votre ID utilisateur Edamam
+    const EDAMAM_USER_ID = 'Rinoxx1'; // Your Edamam User ID
 
-    const [currentRecipes, setCurrentRecipes] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [currentRecipes, setCurrentRecipes] = useState([]); // State for home page search results
+    const [loading, setLoading] = useState(false); // Loading state for home page search
+    const [errorMessage, setErrorMessage] = useState(''); // Error state for home page search
+
+    // States for the global RecipeDetailModal
     const [selectedRecipe, setSelectedRecipe] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Create a ref to store a function that clears SearchBar's input
+    const searchBarClearInputRef = useRef(null); 
+
+    /**
+     * Resets the main application state to its initial values,
+     * effectively clearing home page search results, errors, and the search bar input.
+     */
+    const resetApp = useCallback(() => {
+        setCurrentRecipes([]);
+        setErrorMessage('');
+        setLoading(false); // Ensure loading is false
+        setSelectedRecipe(null); // Clear any selected recipe
+        setIsModalOpen(false); // Close modal if open
+
+        // Call the function stored in the ref to clear the search bar input
+        if (searchBarClearInputRef.current) {
+            searchBarClearInputRef.current();
+        }
+    }, []); // No dependencies, so this function is stable and won't cause unnecessary re-renders
+
     /**
      * Fetches recipes based on entered ingredients using Edamam API.
+     * This function is specifically for the main search on the home page.
      * @param {string} ingredientsInput - Comma-separated string of ingredients.
      */
     const fetchRecipes = async (ingredientsInput) => {
@@ -74,54 +105,78 @@ function App() {
 
     /**
      * Opens the modal and displays full recipe details.
+     * This function is passed to both HomeContent and CategoryPage.
      * @param {object} recipe - The recipe object to display details for.
      */
-    const openRecipeDetails = (recipe) => {
+    const openRecipeDetails = useCallback((recipe) => {
         setSelectedRecipe(recipe);
         setIsModalOpen(true);
-    };
+    }, []); // Stable function
 
     /**
      * Closes the recipe detail modal.
+     * This function is passed to the RecipeDetailModal component.
      */
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         setIsModalOpen(false);
         setSelectedRecipe(null);
-    };
+    }, []); // Stable function
 
     return (
-        <div className="flex flex-col min-h-screen">
-            <Header />
-            <div className="container mx-auto p-6 sm:p-10 bg-white rounded-3xl shadow-2xl w-full max-w-6xl border border-amber-100 mt-20 sm:mt-24 mb-10 flex-grow">
-                <SearchBar onSearch={fetchRecipes} isLoading={loading} />
+        <Router> {/* Wrap the entire application with Router */}
+            <div className="flex flex-col min-h-screen">
+                {/* Header is always visible */}
+                <Header onLogoClick={resetApp} /> 
+                
+                <Routes> {/* Define routes here */}
+                    {/* Home Page Route */}
+                    <Route 
+                        path="/" 
+                        element={
+                            <HomeContent
+                                currentRecipes={currentRecipes}
+                                setCurrentRecipes={setCurrentRecipes} // Still needed for HomeContent to manage its own search results
+                                loading={loading}
+                                setLoading={setLoading}
+                                errorMessage={errorMessage}
+                                setErrorMessage={setErrorMessage}
+                                fetchRecipes={fetchRecipes} // Pass the main fetch function
+                                openRecipeDetails={openRecipeDetails} // Pass modal opener
+                                searchBarClearInputRef={searchBarClearInputRef} // Pass ref for search bar reset
+                            />
+                        } 
+                    />
 
-                {loading && (
-                    <div id="loadingIndicator" className="flex justify-center items-center py-10 sm:py-12">
-                        <div className="loader"></div>
-                        <span className="ml-4 sm:ml-6 text-xl sm:text-2xl font-medium text-gray-600">Recherche de recettes en cours...</span>
-                    </div>
-                )}
+                    {/* Category Page Route - now dynamic and receives modal props */}
+                    <Route 
+                        path="/categories/:categoryName" 
+                        element={
+                            <CategoryPage
+                                APP_ID={APP_ID}
+                                APP_KEY={APP_KEY}
+                                EDAMAM_USER_ID={EDAMAM_USER_ID}
+                                openRecipeDetails={openRecipeDetails} // Pass modal opener
+                            />
+                        } 
+                    />
 
-                {errorMessage && (
-                    <div className="col-span-full text-center py-10 sm:py-16">
-                        <p className="text-2xl sm:text-3xl font-semibold text-red-500">{errorMessage}</p>
-                    </div>
-                )}
+                    {/* Static Pages Routes */}
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                    <Route path="/terms-of-use" element={<TermsOfUse />} />
+                    
+                    {/* Catch-all route for 404 Not Found */}
+                    <Route path="*" element={
+                        <div className="container mx-auto p-6 sm:p-10 bg-white rounded-3xl shadow-2xl w-full max-w-4xl border border-amber-100 mt-20 sm:mt-24 mb-10 flex-grow text-center">
+                            <h1 className="text-5xl font-extrabold text-red-600 mb-4">404</h1>
+                            <p className="text-2xl text-gray-700">Oops! La page que vous recherchez n'existe pas.</p>
+                            <a href="/" className="mt-8 inline-block bg-lime-600 text-white py-3 px-6 rounded-lg text-xl hover:bg-lime-700 transition duration-300">Retour à l'accueil</a>
+                        </div>
+                    } />
+                </Routes>
 
-                {!loading && !errorMessage && currentRecipes.length === 0 && (
-                    <div className="col-span-full text-center py-10 sm:py-16">
-                        <p className="text-2xl sm:text-3xl font-semibold text-gray-600">
-                            Commencez par entrer des ingrédients pour trouver de délicieuses recettes !
-                        </p>
-                    </div>
-                )}
-
-                <div id="recipeResults" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
-                    {currentRecipes.map((hit) => (
-                        <RecipeCard key={hit.recipe.uri} recipe={hit.recipe} onViewDetails={openRecipeDetails} />
-                    ))}
-                </div>
-
+                {/* RecipeDetailModal is now rendered globally, outside of Routes, so any page can trigger it */}
                 {selectedRecipe && (
                     <RecipeDetailModal 
                         isOpen={isModalOpen} 
@@ -129,9 +184,11 @@ function App() {
                         recipe={selectedRecipe} 
                     />
                 )}
+
+                {/* Footer is always visible */}
+                <Footer />
             </div>
-            <Footer />
-        </div>
+        </Router>
     );
 }
 

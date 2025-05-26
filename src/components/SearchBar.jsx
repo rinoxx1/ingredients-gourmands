@@ -1,11 +1,27 @@
 // src/components/SearchBar.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Import useEffect
 
-function SearchBar({ onSearch, isLoading }) {
+// Accept setClearInputRef prop
+function SearchBar({ onSearch, isLoading, setClearInputRef }) {
     const [inputValue, setInputValue] = useState('');
+
+    // Use useEffect to expose the clear function to the parent via the ref
+    useEffect(() => {
+        if (setClearInputRef) {
+            setClearInputRef.current = () => setInputValue('');
+        }
+        // Cleanup function for the ref, important if component unmounts
+        return () => {
+            if (setClearInputRef) {
+                setClearInputRef.current = null;
+            }
+        };
+    }, [setClearInputRef]); // Re-run if setClearInputRef changes
 
     const handleSearch = () => {
         onSearch(inputValue);
+        // Clear input after search is initiated
+        setInputValue(''); 
     };
 
     const handleKeyPress = (event) => {
@@ -26,6 +42,7 @@ function SearchBar({ onSearch, isLoading }) {
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     disabled={isLoading}
+                    aria-label="Rechercher"
                 />
                 <button
                     id="searchButton"
