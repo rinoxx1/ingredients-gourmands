@@ -45,7 +45,7 @@ function PrivacyPolicy() {
 
                 <h2 className="text-2xl sm:text-3xl font-semibold text-lime-700 mt-8 mb-4">Contact</h2>
                 <p>
-                    Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à <a href="mailto:contact@ingredientsgourmands.com" className="text-lime-700 hover:underline">contact@ingredientsgourmands.com</a>.
+                    Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à <a href="ingredientsgourmands@gmail.com" className="text-lime-700 hover:underline">ingredientsgourmands@gmail.com</a>.
                 </p>
                 <p className="text-sm text-gray-500 mt-8 italic">Dernière mise à jour : 26 mai 2025</p>
             </div>

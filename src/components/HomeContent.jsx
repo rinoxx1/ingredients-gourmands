@@ -1,11 +1,11 @@
 // src/components/HomeContent.jsx
-import React from 'react';
+import React from 'react'; // Removed useEffect as it's no longer needed here
 import { Link } from 'react-router-dom'; // Import Link for category navigation
 
 // Import home page specific components
 import SearchBar from './SearchBar';
 import RecipeCard from './RecipeCard';
-import RecipeDetailModal from './RecipeDetailModal'; // The modal remains here to be managed by the App's state
+// Removed: import RecipeDetailModal from './RecipeDetailModal'; // No longer needed here
 
 // Definition of the CategoryCard component OUTSIDE HomeContent
 const CategoryCard = ({ categoryName, iconClass }) => {

@@ -2,10 +2,8 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Import your existing components
+// Import your existing components (removed unused SearchBar and RecipeCard)
 import Header from './components/Header';
-import SearchBar from './components/SearchBar'; // Keep SearchBar import for passing to HomeContent
-import RecipeCard from './components/RecipeCard'; // Keep RecipeCard import for passing to HomeContent
 import RecipeDetailModal from './components/RecipeDetailModal'; // Keep RecipeDetailModal import for global use
 import Footer from './components/Footer';
 import HomeContent from './components/HomeContent'; // Import HomeContent
